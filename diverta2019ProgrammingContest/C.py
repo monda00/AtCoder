@@ -3,22 +3,24 @@ C - AB Substrings
 '''
 
 str_list = []
-end_a = []
-start_b = []
 ab_num = 0
+c1 = 0
+c2 = 0
+c3 = 0
 for i in range(int(input())):
     str_list.append(input())
-    if 'AB' in str_list[-1]:
-        ab_num += 1
-    if str_list[-1].endswith('A'):
-        end_a.append(i)
-    if str_list[-1].startswith('B'):
-        start_b.append(i)
+    ab_num += str_list[-1].count('AB')
+    if str_list[-1].endswith('A') and str_list[-1].startswith('B'):
+        c1 += 1
+    elif str_list[-1].startswith('B'):
+        c2 += 1
+    elif str_list[-1].endswith('A'):
+        c3 += 1
 
-if end_a == start_b:
-    ab_num += min(len(end_a), len(start_b)) - 1
+if c1 == 0:
+    print(ab_num + min(c2, c3))
+elif c2 + c3 == 0:
+    print(ab_num + c1 - 1)
 else:
-    ab_num += min(len(end_a), len(start_b))
-
-print(ab_num)
+    print(ab_num + c1 + min(c2, c3))
 
