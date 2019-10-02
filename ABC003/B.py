@@ -1,5 +1,6 @@
 def is_atcoder(c):
-    if c == 'a' or 't' or 'c' or 'o' or 'd' or 'e' or 'r':
+    if c == 'a' or c == 't' or c == 'c' or c == 'o' or \
+            c == 'd' or c == 'e' or c == 'r':
         return True
     else:
         return False
