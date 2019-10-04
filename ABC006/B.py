@@ -11,8 +11,8 @@ elif n == 3:
 else:
     for i in range(3, n):
         a = a_0 + a_1 + a_2
-        a_0 = a_1
-        a_1 = a_2
-        a_2 = a
+        a_0 = a_1 % 10007
+        a_1 = a_2 % 10007
+        a_2 = a % 10007
     print(a % 10007)
 
