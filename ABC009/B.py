@@ -1,18 +1,13 @@
+import numpy as np
+
 n = int(input())
-a_li = list(map(int, input().split()))
+menu_list = []
 
-success_ptn = [9, 7, 3, 1]
+for _ in range(n):
+    menu_list.append(int(input()))
 
-ans = 0
-for a in a_li:
-    for ptn in success_ptn:
-        if a < ptn:
-            continue
-        elif a == ptn:
-            break
-        else:
-            ans += (a - ptn)
-            break
+money_set = np.array(list(set(menu_list)))
+money_sorted_ind = money_set.argsort()[::-1]
 
-print(ans)
+print(money_set[money_sorted_ind[1]])
 
