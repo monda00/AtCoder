@@ -10,15 +10,21 @@ for aged_num in range(pepole_num + 1):
     # 残りが奇数だと4と2では構成できない
     if (legs_num - aged_num * aged_leg) % 2 == 1:
         continue
-    for baby_num in range(pepole_num - aged_num + 1):
-        adult_num = pepole_num - baby_num - aged_num
-        sum_legs = baby_num * baby_leg + aged_num * aged_leg + \
-            adult_num * adult_leg
-        # すでにlegs_nmを超えていたら
-        if sum_legs > legs_num:
-            break
-        if sum_legs == legs_num:
-            print(adult_num, aged_num, baby_num)
-            exit()
+
+    # つるかめ算
+    rem_legs_num = legs_num - (aged_leg * aged_num)
+    # 全員が赤ちゃんだと
+    baby_num = pepole_num - aged_num
+    # 差分がいくつあるか
+    diff_legs = abs(rem_legs_num - (baby_leg * baby_num))
+    # 差分を埋める大人の人数を決める
+    adult_num = diff_legs // (baby_leg - adult_leg)
+    # 再度赤ちゃんの人数を決める
+    baby_num = pepole_num - adult_num - aged_num
+    sum_legs = baby_leg * baby_num + aged_leg * aged_num + adult_leg * adult_num
+    if sum_legs == legs_num and \
+            baby_num >= 0 and aged_num >= 0 and adult_num >= 0:
+        print(adult_num, aged_num, baby_num)
+        exit()
 print(-1, -1, -1)
 
