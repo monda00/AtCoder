@@ -34,7 +34,7 @@ while input_string:
         if changed_num<=changed_limit:
           alphabet_num[c] -= 1
           # 上限を下げる
-          changed_limit -= 1 if input_string[0]!=i else 0
+          changed_limit -= 1 if input_string[0]!=c else 0
           input_string = input_string[1:]
           answer += c
           print('answer :{}'.format(answer))
