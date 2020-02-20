@@ -1,24 +1,40 @@
+import numpy as np
+
 n, k = map(int, input().split())
-a_li = list(map(int, input().split()))
+a = np.array(list(map(int, input().split())))
+a.sort()
 
-a_li.sort()
+zero = a[a==0]
+pos = a[a>0]
+neg = a[a<0]
 
-rem_k = k
-for i in range(1, n + 1):
-    if rem_k - (n - i) < 0:
-        round_index = i - 1
-        break
-    rem_k -= (n - i)
-min_index = rem_k + 1
-round_num = a_li[round_index]
-del a_li[round_index]
+l = -10**18
+r = 10**18
 
-# マイナスの値がある
-if a_li[0] < 0:
-    ans = round_num * a_li[-1 * (min_index + 1)]
-# マイナスの値がない
-else:
-    ans = round_num * a_li[min_index]
+# 二分探索
+# c以下になる組み合わせがいくつあるか計算する
+while l+1<r:
+    c = (l + r) // 2
+    print('c :', c)
+    cnt = 0
 
-print(ans)
+    # 0になる組み合わせの個数のカウントを追加
+    if c >= 0:
+        cnt += n * len(zero)
 
+    print(c//pos)
+    print('c//pos: ', np.searchsorted(a, c//pos, side='right').sum())
+    print('(-c-1)//(-neg): ',
+          (n-np.searchsorted(a, (-c-1)//(-neg), side='right')).sum())
+    cnt += np.searchsorted(a,c//pos,side='right').sum() + (n-np.searchsorted(a,(-c-1)//(-neg),side='right')).sum()
+    cnt -= np.count_nonzero(a*a<=c)
+    cnt//=2
+
+    print('cnt :', cnt)
+
+    if cnt >= k:
+        l = c
+    else:
+        r = c
+
+print(l)
