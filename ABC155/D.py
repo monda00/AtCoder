@@ -23,9 +23,9 @@ while l+1<r:
         cnt += n * len(zero)
 
     print('x//pos: ', x//pos)
-    print('pos: ', a.searchsorted(x//pos,side='right').sum())
+    print('pos: ', a.searchsorted(x//pos,side='right'))
     print('-(-x//neg): ', -(-x//neg))
-    print('neg: ', (n-a.searchsorted(-(-x//neg),side='right')).sum())
+    print('neg: ', (n-a.searchsorted(-(-x//neg),side='right')))
     cnt += a.searchsorted(x//pos,side='right').sum()
     cnt += (n-a.searchsorted(-(-x//neg),side='left')).sum()
     cnt -= np.count_nonzero(a*a<=x)
