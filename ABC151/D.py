@@ -1,64 +1,58 @@
-def calc_distance(maze, sx, sy):
-    maze[sx][sy] = 'S'
+import queue
+INF = 100000000
 
-    # Goalまでの距離としてはあり得ない数値を設定
-    INF = 100000000
+n, m = map(int, input().split())
+maze = list()
+dx = [1, 0, -1, 0]
+dy = [0, 1, 0, -1]
 
-    field_x_length = len(maze[0])
-    field_y_length = len(maze)
+for _ in range(n):
+    maze.append(list(input()))
 
-    # mazeと同じ配列構造で全てINFの二次元配列を作る
-    distance = []
-    for i in range(field_y_length):
-        distance.append([])
-        for j in range(field_x_length):
-            if maze[i][j] == '#':
-                distance[i].append(-1)
-            else:
-                distance[i].append(INF)
 
-    # queue配列を作り、ここに座標を格納する
-    queue = []
+def bfs(sx, sy):
+    """
+    幅優先探索で迷路の最短経路を計算する。
 
-    # queueの末尾にStart座標を入れる
-    queue.insert(0, (sy, sx))
+    Parameters
+    ----------
+    sx : int
+        スタートのx座標
+    sy : int
+        スタートのy座標
 
-    # Startの座標距離は0に設定
-    distance[sy][sx] = 0
+    Returns
+    ----------
+    ans : int
+        迷路の最短経路
+    """
+    que = queue.Queue()
+    d = [[INF] * m for _ in range(n)]
+    que.put([sx, sy])
+    d[sx][sy] = 0
+    max_d = 0
 
-    # 全てのマスが埋まるまで
-    while True:
-        # 最初に入れた要素を取り出す
-        y, x = queue.pop()
+    while not que.empty():
+        p = que.get()
+        for i in range(4):
+            nx = p[0] + dx[i]
+            ny = p[1] + dy[i]
+            if 0 <= nx < n and 0 <= ny < m and maze[nx][ny] != '#' and d[nx][ny] == INF:
+                que.put([nx, ny])
+                d[nx][ny] = d[p[0]][p[1]] + 1
+                if d[nx][ny] > max_d:
+                    max_d = d[nx][ny]
 
-        # INFの値が無くなったら終了
-        if not INF in distance:
-            break
+    return max_d
 
-        # 新しい座標(ny, nx)に現時点の座標から
-        # (0, 1)(1, 0)(0, -1)(-1, 0)移動した値を代入
-        for i in range(0, 4):
-            nx, ny = x + [1, 0, -1, 0][i], y + [0, 1, 0, -1][i]
 
-            # 移動先ny, nxが迷路の範囲内
-            # かつ壁（maze配列が#）でなく、
-            # かつ未到達（distance配列がINF）であるときに
-            # 現時点の距離+1をdistance配列に格納する
-            # 現時点の座標をqueue配列に格納する（再ループの時にその座標から始める）
-            if (0 <= nx and nx < field_x_length and 0 <= ny and ny < field_y_length and maze[ny][nx] != '#' and distance[ny][nx] == INF):
-                queue.insert(0, (ny, nx))
-                distance[ny][nx] = distance[y][x] + 1
+ans = 0
+for sx in range(n):
+    for sy in range(m):
+        if maze[sx][sy] == '#':
+            continue
+        d = bfs(sx, sy)
+        if d > ans:
+            ans = d
 
-    # 全ての値を埋めたら、最も遠い点の距離を返す
-    return max(distance)
-
-height, wedth = map(int, input().split())
-maze_original = list()
-for _ in range(height):
-    maze_original.append(list(input()))
-
-print(calc_distance(maze_original, 0, 0))
-print(calc_distance(maze_original, 0, 1))
-print(calc_distance(maze_original, 0, 2))
-print(maze_original)
-
+print(ans)
