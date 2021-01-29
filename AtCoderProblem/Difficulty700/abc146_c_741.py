@@ -14,6 +14,6 @@ while (upper - lower) > 1:
     else:
         upper = n
 
-ans = n
+ans = lower
 
 print(ans)
