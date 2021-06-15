@@ -5,19 +5,19 @@
 n = int(input())
 A = list(map(int, input().split()))
 
-ans = 1 << 30
+ans = 2**30
 
-for i in range(1 << (n-1)):
+# 区切る箇所をビット探索で
+for i in range(2**(n-1)):
     or_ = 0
     xor = 0
-    for j in range(len(A)):
+    for j in range(n):
         or_ |= A[j]
-        if j + 1 == len(A):
-            xor ^= or_
-            continue
+        # 区切る箇所がきたら
         if (i >> j) & 1:
             xor ^= or_
             or_ = 0
+    xor ^= or_
     ans = min(ans, xor)
 
 print(ans)
