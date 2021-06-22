@@ -8,6 +8,7 @@ import numpy as np
 class UnionFind():
     """
     Union Find木クラス
+
     Attributes
     --------------------
     n : int
@@ -30,13 +31,15 @@ class UnionFind():
         self.root = [-1]*(n+1)
         self.rank = [0]*(n+1)
 
-    def find_root(self, x):
+    def find(self, x):
         """
         ノードxの根を見つける
+
         Parameters
         ---------------------
         x : int
             見つけるノード
+
         Returns
         ---------------------
         root : int
@@ -45,12 +48,13 @@ class UnionFind():
         if(self.root[x] < 0):
             return x
         else:
-            self.root[x] = self.find_root(self.root[x])
+            self.root[x] = self.find(self.root[x])
             return self.root[x]
 
     def unite(self, x, y):
         """
         木の併合
+
         Parameters
         ---------------------
         x : int
@@ -58,52 +62,89 @@ class UnionFind():
         y : int
             併合したノード
         """
-        # 入力ノードのrootノードを見つける
-        x = self.find_root(x)
-        y = self.find_root(y)
-        # すでに同じ木に属していた場合
+        x = self.find(x)
+        y = self.find(y)
+
         if(x == y):
             return
-        # 違う木に属していた場合rankを見てくっつける方を決める
         elif(self.rank[x] > self.rank[y]):
             self.root[x] += self.root[y]
             self.root[y] = x
         else:
             self.root[y] += self.root[x]
             self.root[x] = y
-            # rankが同じ（深さに差がない場合）は1増やす
             if(self.rank[x] == self.rank[y]):
                 self.rank[y] += 1
 
-    def is_samegroup(self, x, y):
+    def same(self, x, y):
         """
         同じグループに属するか判定
+
         Parameters
         ---------------------
         x : int
             判定したノード
         y : int
             判定したノード
+
         Returns
         ---------------------
         ans : bool
             同じグループに属しているか
         """
-        return self.find_root(x) == self.find_root(y)
+        return self.find(x) == self.find(y)
 
-    def count(self, x):
+    def size(self, x):
         """
         木のサイズを計算
+
         Parameters
         ---------------------
         x : int
             計算したい木のノード
+
         Returns
         ---------------------
-        cnt : int
+        size : int
             木のサイズ
         """
-        return -self.root[self.find_root(x)]
+        return -self.root[self.find(x)]
+
+    def roots(self):
+        """
+        根のノードを取得
+
+        Returns
+        ---------------------
+        roots : list
+            根のノード
+        """
+        return [i for i, x in enumerate(self.root) if x < 0]
+
+    def group_size(self):
+        """
+        グループ数を取得
+
+        Returns
+        ---------------------
+        size : int
+            グループ数
+        """
+        return len(self.roots())
+
+    def group_members(self):
+        """
+        全てのグループごとのノードを取得
+
+        Returns
+        ---------------------
+        group_members : defaultdict
+            根をキーとしたノードのリスト
+        """
+        group_members = defaultdict(list)
+        for member in range(self.n):
+            group_members[self.find(member)].append(member)
+        return group_members
 
 
 n, m = map(int, input().split())
@@ -120,11 +161,7 @@ uf = UnionFind(n)
 for i in range(m):
     uf.unite(c[i], d[i])
 
-groups = defaultdict(list)
-for i in range(uf.n):
-    groups[uf.find_root(i)].append(i)
-
-for g in groups.values():
+for g in uf.group_members().values():
     if sum(a[g]) != sum(b[g]):
         print('No')
         exit()
