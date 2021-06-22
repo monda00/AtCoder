@@ -1,3 +1,6 @@
+from collections import defaultdict
+
+
 class UnionFind():
     """
     Union Find木クラス
@@ -63,11 +66,11 @@ class UnionFind():
         elif(self.rank[x] > self.rank[y]):
             self.root[x] += self.root[y]
             self.root[y] = x
-        elif(self.rank[x] < self.rank[y]):
+        else:
             self.root[y] += self.root[x]
             self.root[x] = y
-        else:
-            self.rank[y] += 1
+            if(self.rank[x] == self.rank[y]):
+                self.rank[y] += 1
 
     def same(self, x, y):
         """
@@ -124,3 +127,17 @@ class UnionFind():
             グループ数
         """
         return len(self.roots())
+
+    def group_members(self):
+        """
+        全てのグループごとのノードを取得
+
+        Returns
+        ---------------------
+        group_members : defaultdict
+            根をキーとしたノードのリスト
+        """
+        group_members = defaultdict(list)
+        for member in range(self.n):
+            group_members[self.find(member)].append(member)
+        return group_members
