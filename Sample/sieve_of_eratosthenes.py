@@ -20,6 +20,6 @@ def sieve_of_eratosthenes(n):
 prime = sieve_of_eratosthenes(n)
 for p in range(n+1):
     if prime[p]:
-        print(p)
-
+        print(p, end=' ')
+print('')
 print(sum(prime))
